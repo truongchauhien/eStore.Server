@@ -1,0 +1,9 @@
+{
+    "env": "development",
+    "port": 27017,
+    "database": {
+        "host": "localhost",
+        "port": 27017,
+        "name": "eStore"
+    }
+}
