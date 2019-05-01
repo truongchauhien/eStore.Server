@@ -25,6 +25,8 @@
   "dependencies": {
     "@types/express": "^4.16.1",
     "@types/mongoose": "^5.3.24",
+    "convict": "^4.4.1",
+    "dotenv": "^7.0.0",
     "express": "^4.16.4",
     "mongoose": "^5.4.20"
   }
