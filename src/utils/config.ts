@@ -20,6 +20,9 @@ let config = convict({
         name: {
             default: 'eStore'
         }
+    },
+    jwtSecretKey: {
+        default: 's3cr3t k3y'
     }
 });
 
