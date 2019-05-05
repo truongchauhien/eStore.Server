@@ -59,36 +59,36 @@ const roles: IRoleMap = {
     }
 }
 
-function hasPermission(args: { requestedPermission: string, requestedResource: string, requestedRole: string }): boolean {
-    const { requestedPermission, requestedResource, requestedRole } = args;
+function checkRoleHasPermission(args: { requiredResource: string, requiredPermission: string, role: string }): boolean {
+    const { requiredResource, requiredPermission, role } = args;
 
     // Use "hasOwnProperty" in TypeScript.
     const hasOwnProperty = Object.prototype.hasOwnProperty;
 
-    if (!hasOwnProperty.call(roles, requestedRole)) {
+    if (!hasOwnProperty.call(roles, role)) {
         return false;
     }
 
-    const resources = (roles[requestedRole] as IRole).resources
-    const resource = resources.find(resource => resource.id === requestedResource)
+    const resources = (roles[role] as IRole).resources
+    const resource = resources.find(resource => resource.id === requiredResource)
     if (!resource) {
         return false;
     }
-    if (resource.permissions.indexOf(requestedPermission) === -1) {
+    if (resource.permissions.indexOf(requiredPermission) === -1) {
         return false;
     }
 
     return true;
 }
 
-function requiredPermission(args: { permission: string, resource: string }) {
+function requiredPermission(args: { requiredResource: string, requiredPermission: string }) {
     return function (req: Request, res: Response, next: NextFunction) {
         const user = req['user'];
         const userRoles = user.roles as string[];
 
-        const { resource, permission} = args;
-        for (const userRole of userRoles) {
-            if (hasPermission({ requestedPermission: permission, requestedResource: resource, requestedRole: userRole })) {
+        const { requiredResource, requiredPermission} = args;
+        for (const role of userRoles) {
+            if (checkRoleHasPermission({ requiredResource: requiredResource, requiredPermission: requiredPermission, role: role })) {
                 return next();
             }
         }
