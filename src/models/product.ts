@@ -4,10 +4,10 @@ const Schema = mongoose.Schema;
 const ProductSchema = new Schema({
     name: String,
     unit: String,
-    barcode: String,
+    upc: String,
     price: Number,
-    vat: Number,
-    priceVat: Number,
+    // vat: Number,
+    // priceVat: Number,
     category: {
         type: Schema.Types.ObjectId,
         ref: 'Category'
