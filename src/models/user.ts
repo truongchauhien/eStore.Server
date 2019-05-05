@@ -5,15 +5,19 @@ const userSchema = new Schema({
     userName: String,
     password: String,
     refreshToken: String,
+    roles: [{
+        type: String,
+        enum: ['cashier', 'stockClerk', 'manager', 'systemAdmin']
+    }],
     lastLogin: Date,
     fullName: String,
     birthday: Date,
     idNumber: String,
     phoneNumber: String,
-    position: [{
+    position: {
         type: String,
-        enum: ['Quản lí', 'Nhập hàng', 'Thu ngân', 'Admin']
-    }],
+        enum: ['Thu ngân', 'Kiểm hàng', 'Quản lí']
+    },
     address: String,
     salary: Number,
     allowance: Number,
@@ -29,5 +33,5 @@ const userSchema = new Schema({
     },
 });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema, 'users');
 export default User;
