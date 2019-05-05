@@ -87,7 +87,7 @@ function requiredPermission(args: { permission: string, resource: string }) {
         const userRoles = user.roles as string[];
 
         const { resource, permission} = args;
-        for (const userRole in userRoles) {
+        for (const userRole of userRoles) {
             if (hasPermission({ requestedPermission: permission, requestedResource: resource, requestedRole: userRole })) {
                 return next();
             }
