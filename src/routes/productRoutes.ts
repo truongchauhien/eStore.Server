@@ -5,6 +5,13 @@ import * as productController from '../controllers/productController';
 
 const router = express.Router();
 
-router.route('/').post(productController.create);
+router.route('/')
+    .get(productController.list)
+    .post(productController.create);
+
+router.route('/:id')
+    .get(productController.detail)
+    .put(productController.update)
+    .delete(productController.remove);
 
 export default router;
