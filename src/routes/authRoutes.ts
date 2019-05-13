@@ -1,5 +1,5 @@
 import express from 'express';
-import userModel from '../models/user';
+import employeeModel from '../models/employee';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
@@ -16,9 +16,9 @@ router.route('/login').post(async (req, res) => {
         return;
     }
 
-    let user;
+    let employee;
     try {
-        user = await userModel
+        employee = await employeeModel
             .findOne({ userName: userName }, '_id userName password')
             .lean()
             .exec();
@@ -27,14 +27,14 @@ router.route('/login').post(async (req, res) => {
         return;
     }
 
-    if (!user) {
-        res.status(404).json({ message: "No such user." });
+    if (!employee) {
+        res.status(404).json({ message: "No such user name." });
         return;
     }
 
     let isMatchingPassword = false;
     try {
-        isMatchingPassword = await bcrypt.compare(password, user.password)
+        isMatchingPassword = await bcrypt.compare(password, employee.password)
     } catch (ex) {
         res.status(500).json({ message: 'Internal server error.', error: ex });
         return;
@@ -48,7 +48,7 @@ router.route('/login').post(async (req, res) => {
     let refreshToken = crypto.randomBytes(64).toString('hex');
 
     try {
-        user = await userModel.findByIdAndUpdate(user._id,
+        employee = await employeeModel.findByIdAndUpdate(employee._id,
             { $set: { refreshToken: refreshToken } },
             { new: true, upsert: true, select: '_id userName roles fullName' }
         ).lean().exec();
@@ -58,8 +58,8 @@ router.route('/login').post(async (req, res) => {
     }
 
     const jwtPayload = {
-        id: user._id,
-        roles: user.roles
+        _id: employee._id,
+        roles: employee.roles
     };
 
     const accessToken = jwt.sign(
@@ -68,44 +68,44 @@ router.route('/login').post(async (req, res) => {
         { expiresIn: '1h' }
     );
 
-    const userId = user._id;
-    delete user._id;
+    const employeeDocumentId = employee._id
+    delete employee._id;
     res.status(200).json({
-        userId: userId,
+        userId: employeeDocumentId,
         accessToken: accessToken,
         expiredAt: (jwt.decode(accessToken, { complete: true }))['payload']['exp'] * 1000,
         refreshToken: refreshToken,
-        user: user
+        user: employee
     })
 });
 
 router.route('/token').post(async (req, res) => {
     const { userId, refreshToken } = req.body;
     if (!userId || !refreshToken) {
-        res.status(400).json({ message: 'Missing user id or refresh token.' });
+        res.status(400).json({ message: 'Missing employee id  or refresh token.' });
     }
 
-    let user;
+    let employee;
     try {
-        user = await userModel.findById(userId, '_id refreshToken').lean().exec();
+        employee = await employeeModel.findById(userId, '_id refreshToken').lean().exec();
     } catch (ex) {
         res.status(500).json({ message: 'Internal server error.', error: ex });
         return;
     }
 
-    if (!user) {
+    if (!employee) {
         res.status(404).json({ message: 'No such user.' });
         return;
     }
 
-    if (user.refreshToken !== refreshToken) {
+    if (employee.refreshToken !== refreshToken) {
         res.status(401).json({ message: 'Refresh token was not matching.' });
         return;
     }
 
     const newRefreshToken = crypto.randomBytes(64).toString('hex');
     try {
-        user = await userModel.findByIdAndUpdate(user._id,
+        employee = await employeeModel.findByIdAndUpdate(employee._id,
             { $set: { refreshToken: newRefreshToken } },
             { upsert: true, new: true, select: '_id userName roles fullName' }
         ).lean().exec();
@@ -115,8 +115,8 @@ router.route('/token').post(async (req, res) => {
     }
 
     const jwtPayload = {
-        id: user._id,
-        roles: user.roles
+        id: employee._id,
+        roles: employee.roles
     };
 
     const accessToken = jwt.sign(
@@ -125,12 +125,12 @@ router.route('/token').post(async (req, res) => {
         { expiresIn: '1h' }
     );
 
-    delete user._id;
+    delete employee._id;
     res.status(200).json({
         accessToken: accessToken,
         expiredAt: (jwt.decode(accessToken, { complete: true }))['payload']['exp'] * 1000,
         refreshToken: newRefreshToken,
-        user: user
+        user: employee
     })
 });
 
