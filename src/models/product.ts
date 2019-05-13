@@ -8,6 +8,10 @@ const ProductSchema = new Schema({
     price: Number,
     // vat: Number,
     // priceVat: Number,
+    quantity: {
+        type: Number,
+        default: 0,
+    },
     category: {
         type: Schema.Types.ObjectId,
         ref: 'Category'
