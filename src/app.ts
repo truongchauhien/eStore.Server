@@ -10,6 +10,8 @@ import categoryRoutes from './routes/categoryRoutes';
 import distributorRoutes from './routes/distributorRoutes';
 import orderRoutes from './routes/orderRoutes';
 import employeeRoutes from './routes/employeeRoutes';
+import supplyRoutes from './routes/supplyRoutes';
+import reportRoutes from './routes/reportRoutes';
 
 async function main() {
     let mongoDbUri = `mongodb://${config.get('database.host')}:${config.get('database.port')}/${config.get('database.name')}`;
@@ -32,6 +34,8 @@ async function main() {
     app.use('/distributor', distributorRoutes);
     app.use('/order', orderRoutes);
     app.use('/employee', employeeRoutes);
+    app.use('/supply', supplyRoutes);
+    app.use('/report', reportRoutes);
 
     const appPort = config.get('port');
     app.listen(appPort, () => console.log(`App listening on port ${appPort}`));
