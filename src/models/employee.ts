@@ -25,72 +25,58 @@ const employeeSchema = new Schema({
     workShifts: {
         monday: {
             start: {
-                type: String,
-                default: ''
+                type: String
             },
             end: {
-                type: String,
-                default: ''
+                type: String
             }
         },
         tuesday: {
             start: {
-                type: String,
-                default: ''
+                type: String
             },
             end: {
-                type: String,
-                default: ''
+                type: String
             }
         },
         wednesday: {
             start: {
-                type: String,
-                default: ''
+                type: String
             },
             end: {
-                type: String,
-                default: ''
+                type: String
             }
         },
         thursday: {
             start: {
-                type: String,
-                default: ''
+                type: String
             },
             end: {
-                type: String,
-                default: ''
+                type: String
             }
         },
         friday: {
             start: {
-                type: String,
-                default: ''
+                type: String
             },
             end: {
-                type: String,
-                default: ''
+                type: String
             }
         },
         saturday: {
             start: {
-                type: String,
-                default: ''
+                type: String
             },
             end: {
-                type: String,
-                default: ''
+                type: String
             }
         },
         sunday: {
             start: {
-                type: String,
-                default: ''
+                type: String
             },
             end: {
-                type: String,
-                default: ''
+                type: String
             }
         }
     },
