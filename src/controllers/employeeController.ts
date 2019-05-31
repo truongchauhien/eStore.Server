@@ -21,8 +21,8 @@ export const list = async (req: Request, res: Response) => {
 
     try {
         const [employees, total] = await Promise.all([
-            buildQuery().skip(offset).limit(limit).exec(),
-            buildQuery().countDocuments().exec()
+            buildQuery().skip(offset).limit(limit).lean().exec(),
+            buildQuery().countDocuments().lean().exec()
         ]);
 
         res.status(200).json({
